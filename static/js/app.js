@@ -25,43 +25,87 @@ function renderData(data) {
       });
     });
   }
-  
+
 // Render complete datatable on the page
 renderData(tableData);
 
-// Variable that holds all data to be filtered
 
-var filteredData = tableData;
 
-// Filter function that goes through all inputs
-function filterFunctions() {
-  d3.event.preventDefault();
-
-  inputs._groups.forEach(filter => {
-    // Assign the property ID to the key variable
-    var key = d3.select(this).property('id');
-    // Assign input value to the value variable
-    var value = d3.select(this).property('value');
-
-    // If the input value is not null, the data is filtered
-    if (value) {
-      // Using the key variable to look up the appropriate key in
-      // the dataset
-      filteredData = filteredData.filter(data => data[key] === value);
-    }
-  })
+// Listening function for all filters
+function multiFilter() {
   
-  // Final filtered data is rendered once loop is complete
-  renderData(filteredData);
+  // Prevent page refresh
+  d3.event.preventDefault();
+ 
+  // Create variables to hold multi user form input
+  var date = d3.select("#datetime").property('value');
+  var city = d3.select("#city").property('value');
+  var state = d3.select("#state").property('value');
+  var country = d3.select("#country").property('value');
+  var shape = d3.select("#shape").property('value');
+     
+  // Empty prior loaded html table (for filtered items to be loaded)
+  tbody.html('');
+ 
+  // Load all data
+  var mfilteredData = tableData
+  // Conditional, when variable length is 0, filtering does not take place
+  if (date.length === 0){
+    // No action
+  }   else{
+    //  Filter by this variable
+    mfilteredData = mfilteredData.filter(row => row.datetime == date);
+    // Clear input form data
+      // d3.select('#datetime').property('value', '');
+   }
+  
+  if (city.length === 0){
+    // No action
+  }   else{
+  //  Filter by this variable
+    mfilteredData = mfilteredData.filter(row => row.city == city);
+    // Clear input form data
+      // d3.select("#city").property('value', '');
+   }
+  
+   if (state.length === 0){
+    // No action
+  }   else{
+    //  Filter by this variable
+    mfilteredData = mfilteredData.filter(row => row.state == state);
+    // Clear input form data
+      // d3.select("#state").property('value', '');
+   }
+   if (country.length === 0){
+     // No action
+    }   else{
+    //  Filter by this variable
+    mfilteredData = mfilteredData.filter(row => row.country == country);
+    // Clear input form data
+      // d3.select("#country").property('value', '');
+   }
+   if (shape.length === 0){
+    // No action
+   }   else{
+    //  Filter by this variable
+    mfilteredData = mfilteredData.filter(row => row.shape == shape);
+    // Clear input form data
+      // d3.select("#shape").property('value', '');
+   }
+   // Render the filtered data
+   renderData(mfilteredData);
 }
 
 // Listener
-inputs.on('change', filterFunctions);
-// button.on("click", multiFilter);
+inputs.on('change', multiFilter);
+
 reset_button.on("click", () => {
+  // Prevent page refresh
+  d3.event.preventDefault();
+
   // Clears all values
   inputs.property('value','');
-  // Resets the filteredData variable
-  filteredData = tableData;
+
   // Renders the unfiltered dataset
-  renderData(tableData)});
+  renderData(tableData)
+});
